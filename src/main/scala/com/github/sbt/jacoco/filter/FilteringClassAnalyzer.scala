@@ -18,6 +18,7 @@ import com.github.sbt.jacoco.filter.ScalaSyntheticMethod._
 import org.jacoco.core.analysis.{Analyzer, ICoverageVisitor, IMethodCoverage}
 import org.jacoco.core.data.ExecutionDataStore
 import org.jacoco.core.internal.analysis.{ClassAnalyzer, ClassCoverageImpl, MethodAnalyzer, StringPool}
+import org.jacoco.core.internal.analysis.filter.Filters
 import org.jacoco.core.internal.data.CRC64
 import org.jacoco.core.internal.flow.{ClassProbesAdapter, MethodProbesVisitor}
 import org.jacoco.core.internal.instr.InstrSupport
@@ -64,7 +65,7 @@ private final class FilteringClassAnalyzer(
     if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
       null // scalastyle:ignore null
     } else {
-      new MethodAnalyzer(stringPool.get(name), stringPool.get(desc), stringPool.get(signature), probes) {
+      new MethodAnalyzer(stringPool.get(name), stringPool.get(desc), stringPool.get(signature), probes, Filters.ALL) {
         override def visitEnd(): Unit = {
           super.visitEnd()
           val hasInstructions = getCoverage.getInstructionCounter.getTotalCount > 0
